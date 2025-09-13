@@ -31,6 +31,10 @@
                 <button id="btnMostrarGestion" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 transform hover:scale-105 shadow-md text-lg">
                     Gestionar Mi Negocio
                 </button>
+                <!-- Nuevo botón en el menú -->
+                <button id="btnMostrarIA" class="w-full md:w-auto bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 transform hover:scale-105 shadow-md text-lg">
+                    Asistente de Viajes IA
+                </button>
             </div>
         </div>
         
@@ -56,7 +60,7 @@
             </div>
 
             <div id="formGestionContenedor" class="hidden bg-white rounded-xl shadow-lg p-6 lg:p-8">
-               <div class="flex justify-between items-center mb-6">
+                <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800">Gestione su Negocio</h2>
                     <button class="btn-atras text-sm text-blue-600 hover:underline font-semibold">← Volver al Menú</button>
                 </div>
@@ -65,6 +69,42 @@
                 <div id="areaGestion" class="hidden mt-6 space-y-6"><div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded"><p class="text-sm text-blue-600 font-semibold">Negocio Encontrado:</p><p id="nombreNegocioEncontrado" class="text-lg font-bold text-gray-800 mt-1"></p></div><div class="bg-gray-50 p-4 rounded-lg"><div class="flex items-center justify-between"><label for="toggleDisponibilidad" class="text-gray-700 font-semibold">Estoy Disponible para recibir clientes</label><div class="relative inline-block w-12 mr-2 align-middle select-none"><input type="checkbox" id="toggleDisponibilidad" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300" style="right: 24px;"/><label for="toggleDisponibilidad" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label></div></div><button id="btnGuardarDisponibilidad" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Guardar Cambios de Disponibilidad</button></div><div class="border-t pt-6"><h3 class="text-red-600 font-semibold mb-3">Zona de Peligro</h3><button id="btnEliminar" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-[1.02] shadow-md">Eliminar Mi Negocio Permanentemente</button></div></div>
                 <div id="mensajeGestion" class="mt-4 hidden"></div>
             </div>
+
+            <!-- Nuevo formulario para la IA -->
+            <div id="formIAContenedor" class="hidden bg-white rounded-xl shadow-lg p-6 lg:p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Asistente de Viajes con IA</h2>
+                    <button class="btn-atras text-sm text-blue-600 hover:underline font-semibold">← Volver al Menú</button>
+                </div>
+                <p class="text-gray-600 mb-6">Complete sus preferencias y reciba recomendaciones personalizadas</p>
+
+                <form id="formIA" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
+                        <input type="text" name="usuario" required placeholder="Ej: Juan Pérez" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Preferencias</label>
+                        <input type="text" name="preferencias" required placeholder="Ej: playa, naturaleza" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Fechas</label>
+                        <input type="text" name="fechas" required placeholder="Ej: 15-20 Octubre" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Presupuesto</label>
+                        <input type="text" name="presupuesto" required placeholder="Ej: 2 millones COP" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Número de personas</label>
+                        <input type="number" name="personas" min="1" value="1" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-md">Consultar IA</button>
+                </form>
+
+                <!-- Respuesta de la IA -->
+                <div id="respuestaIA" class="mt-6 hidden bg-purple-50 border-l-4 border-purple-500 p-4 rounded text-gray-800"></div>
+</div>
         </div>
     </div>
 
@@ -78,6 +118,7 @@
         const seccionFormularios = document.getElementById('seccionFormularios');
         const formRegistroContenedor = document.getElementById('formRegistroContenedor');
         const formGestionContenedor = document.getElementById('formGestionContenedor');
+        const formIAContenedor = document.getElementById('formIAContenedor');
         
         // --- Lógica de Navegación ---
         document.getElementById('btnMostrarRegistro').addEventListener('click', () => {
@@ -92,6 +133,15 @@
             seccionFormularios.classList.remove('hidden');
             formGestionContenedor.classList.remove('hidden');
             formRegistroContenedor.classList.add('hidden');
+        });
+
+        // Botón para abrir la sección IA
+        document.getElementById('btnMostrarIA').addEventListener('click', () => {
+            vistaMenu.classList.add('hidden');
+            seccionFormularios.classList.remove('hidden');
+            formIAContenedor.classList.remove('hidden');
+            formRegistroContenedor.classList.add('hidden');
+            formGestionContenedor.classList.add('hidden');
         });
         
         function volverAlMenu() {
@@ -229,6 +279,36 @@
                 }
             } catch (error) { 
                 mostrarMensaje('mensajeGestion', 'Error de conexión. Por favor verifique su conexión a internet.', 'error'); 
+            }
+        });
+
+        // Manejo del formulario IA
+        document.getElementById('formIA').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const datos = {
+                usuario: formData.get("usuario"), // 👈 ahora viene del input
+                preferencias: formData.get("preferencias"),
+                fechas: formData.get("fechas"),
+                presupuesto: formData.get("presupuesto"),
+                personas: parseInt(formData.get("personas"))
+            };
+            try {
+                const response = await fetch(`${API_BASE}/api/ai/chat`, {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(datos)
+                });
+                if (response.ok) {
+                    const resultado = await response.json();
+                    const respuestaIA = document.getElementById('respuestaIA');
+                    respuestaIA.classList.remove('hidden');
+                    respuestaIA.innerHTML = `<p class="font-semibold">Respuesta de la IA:</p><p>${resultado.respuesta}</p>`;
+                } else {
+                    mostrarMensaje('respuestaIA', 'Error al consultar la IA. Intente nuevamente.', 'error');
+                }
+            } catch (error) {
+                mostrarMensaje('respuestaIA', 'Error de conexión con la IA.', 'error');
             }
         });
     </script>
